@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevFetch</title>
+    <link rel="icon" type="image/x-icon" href="icon.ico">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1f1f1f;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        #header {
+            background-color: #333;
+            padding: 10px;
+            text-align: center;
+        }
+        #support-link, #source-code-link {
+            color: #fff; /* Set link color to white */
+            text-decoration: none; /* Remove default underline */
+            display: inline-block; /* Display as block to apply vertical alignment */
+            margin: 0 20px; /* Add margin for spacing */
+            vertical-align: middle; /* Align vertically in the middle */
+        }
+        #support-link img, #source-code-link img {
+            vertical-align: middle; /* Align icons vertically in the middle */
+        }
+        #support-link:hover, #source-code-link:hover {
+            text-decoration: underline; /* Add underline on hover */
+        }
+        #warnings {
+            background-color: #333;
+            color: #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        #content {
+            width: 80%;
+            margin: 20px auto;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"] {
+            width: calc(100% - 10px);
+            margin-bottom: 10px;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #333;
+            background-color: #333;
+            color: #fff;
+        }
+        button {
+            padding: 8px 15px;
+            background-color: #e3790f;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #cf7011;
+        }
+        #result {
+            margin-top: 20px;
+            background-color: #333;
+            border-radius: 5px;
+            padding: 10px;
+            white-space: pre-wrap;
+            overflow-y: auto;
+            max-height: 300px;
+        }
+        #loading-bar {
+            width: 0%;
+            height: 5px;
+            background-color: #dc8d16;
+            border-radius: 5px;
+            transition: width 0.5s ease;
+            margin-top: 10px;
+        }
+        .sides {
+            margin-left: 485px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <h1>DevFetch</h1>
+        <a id="support-link" href="https://ko-fi.com/voltagedstools" target="_blank">
+            <img src="kofi.png" alt="Support Me" width="30px">
+            <span style="margin-top: -5px;">Support Me</span>
+        </a>
+        <a id="source-code-link" href="https://github.com/VoltagedDebunked/BookmarkJS" target="_blank">
+            <img src="github.ico" alt="Source Code" width="30px">
+            <span style="margin-top: -5px;">View Source Code</span>
+        </a>
+    </div>
+
+    <div id="warnings">
+        <p><strong>Important:</strong> Due to security restrictions, DevFetch may not work with all websites. Ensure that you have permission to scrape the target website before using this tool.</p>
+    </div>
+
+    <div id="content">
+        <label for="url">Enter website URL:</label>
+        <input type="text" id="url" name="url"><br>
+        <button onclick="fetchHtml()">Fetch HTML</button>
+        <div id="loading-bar"></div>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function fetchHtml() {
+            var url = document.getElementById("url").value.trim();
+            if (!url) {
+                alert("Please enter a valid URL.");
+                return;
+            }
+
+            document.getElementById("loading-bar").style.width = "0%";
+            document.getElementById("result").innerText = "Loading...";
+
+            fetchHtmlFromUrl(url)
+                .then(html => {
+                    document.getElementById("result").innerText = html;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById("result").innerText = "Website Scraping failed: " + error;
+                })
+                .finally(() => {
+                    document.getElementById("loading-bar").style.width = "100%";
+                });
+        }
+
+        function fetchHtmlFromUrl(url) {
+            return fetch('/fetch_html?url=' + encodeURIComponent(url))
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                });
+        }
+    </script>
+    <strong class="sides">Made with ❤️ by Voltaged</strong>
+</body>
+</html>
